@@ -101,29 +101,14 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 ### Câu trả lời đúng (Screenshot Output)
 
 <img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/d3cc6775-9bb8-4d45-b599-e890424bc798" />
-> Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
-> "Theo tài liệu ServicePolicy_v2.pdf...")
 
 ------------------------------------------------------------------------
 
 ### Bằng chứng Retrieval đã xảy ra
 
-> \[Chèn 1 screenshot log / dashboard\]
-
-**Bằng chứng cần thể hiện:** - System thực hiện retrieve từ Qdrant
-(Hybrid Search) - Query embedding được tạo - Top-k chunks được trả về -
-Metadata (source document, score) - Retrieved chunks được đưa vào prompt
-trước khi gọi LLM
-
-Ví dụ log:
-
-    [Retriever] Hybrid search executed
-    Query: "What is API rate limit?"
-    Top 3 chunks returned
-    Source: service_policy_v2.pdf
-    Score: 0.82
-
-➡ Chứng minh LLM không tự đoán mà đã nhận context thật từ RAG pipeline.
+- gọi embedding <img width="1047" height="135" alt="image" src="https://github.com/user-attachments/assets/dcd7eeff-6720-454f-87ef-278837287c7d" />
+<img width="695" height="778" alt="image" src="https://github.com/user-attachments/assets/7e47e7d9-d4c4-4f41-8ee0-2732b4a193b3" />
+<img width="643" height="186" alt="image" src="https://github.com/user-attachments/assets/e0b2862f-135a-4b9b-b063-912d451ceb8f" />
 
 ------------------------------------------------------------------------
 
@@ -133,8 +118,8 @@ Ví dụ log:
 
 <img width="1084" height="360" alt="image" src="https://github.com/user-attachments/assets/4d4c7afe-1416-47d9-860a-003e5533d290" />
 
-Ví dụ: - Doc A: API rate limit = 500\
-- Doc B (newer version): API rate limit = 1000\
+Ví dụ: - Doc A: API rate limit = 500
+- Doc B (newer version): API rate limit = 1000
 - System trả lời đúng: **1000**
 
 ------------------------------------------------------------------------
@@ -174,28 +159,8 @@ Ví dụ:
 
 ### Bằng chứng Tool được gọi
 
-<img width="547" height="511" alt="image" src="https://github.com/user-attachments/assets/751991df-3e03-4bfa-b4e1-82dd7327296d" />
-
-Log cần thể hiện rõ:
-
-    [Agent] Tool selected: postgresql.executeQuery
-    Query executed:
-    SELECT SUM(cost)
-    FROM billing
-    WHERE service = 'PaymentGW'
-    AND quarter = 'Q1';
-
-    Tool response:
-    16500
-
-Hoặc HTTP tool:
-
-    [Agent] Calling HTTP Tool: /metrics?service=PaymentGW
-    Response received:
-    { "Q1_cost": 16500 }
-
-➡ Đây là bằng chứng quan trọng nhất: phải thấy tool call + real data
-response.
+<img width="929" height="245" alt="image" src="https://github.com/user-attachments/assets/7659b58b-3864-40e4-b69c-b00befa30636" />
+<img width="638" height="251" alt="image" src="https://github.com/user-attachments/assets/add2393c-226c-4fcc-9d2a-8eecea914166" />
 
 ------------------------------------------------------------------------
 
@@ -203,32 +168,25 @@ response.
 
 ### Screenshot Multi-turn Chat
 
+
+<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/b8ef7cf3-a59f-4cdc-ba0d-342875b95e62" />
+<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/94aff012-2af3-4bcb-aaca-9130c25a79a2" />
+-> thể hiện lịch sử chat trong session với AI và human làm chủ thể 
+
 <img width="1087" height="496" alt="image" src="https://github.com/user-attachments/assets/b8267f29-8bab-4c47-a5a2-39c628b6a31a" />
 <img width="1087" height="552" alt="image" src="https://github.com/user-attachments/assets/df37d8bb-289d-43fb-958d-f257759afd6f" />
 <img width="1073" height="412" alt="image" src="https://github.com/user-attachments/assets/4f19513f-5541-4348-abc1-08d3b0d39990" />
 <img width="1081" height="313" alt="image" src="https://github.com/user-attachments/assets/6e4170db-85dc-4706-b108-090dfb8967c7" />
 
-
-Ví dụ:
-
-User: Q1 cost của PaymentGW là bao nhiêu?\
-AI: \$16,500\
-User: So với Q2 thì sao?\
-AI: Q2 cao hơn 12%
-
-Follow-up tham chiếu lượt trước → chứng minh memory hoạt động.
-
 ------------------------------------------------------------------------
 
 ### Memory Strategy
+<img width="1089" height="802" alt="image" src="https://github.com/user-attachments/assets/27a5c639-8811-41da-875d-5e037c598201" />
 
 -   Sử dụng PostgreSQL làm persistent memory
 -   Lưu:
-    -   user_id
-    -   conversation_id
-    -   chat history
--   Agent inject lịch sử hội thoại vào prompt mỗi turn
--   Giới hạn số turn để tránh prompt overflow
+    -   session_id
+    -   message
 
 ------------------------------------------------------------------------
 
