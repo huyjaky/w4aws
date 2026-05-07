@@ -190,45 +190,6 @@ Ví dụ:
 
 ------------------------------------------------------------------------
 
-# Nếu sử dụng AgentCore
-
-## Architecture Responsibility
-
-  Thành phần                 AgentCore quản lý   Tự build
-  -------------------------- ------------------- ----------
-  Agent loop                 ✅                  
-  Tool orchestration         ✅                  
-  Custom Hybrid Search API                       ✅
-  PostgreSQL Memory                              ✅
-  Observability                                  ✅
-
-------------------------------------------------------------------------
-
-## Annotated Trace Logs
-
-### Example 1 --- RAG-only question
-
-1.  User gửi câu hỏi\
-2.  AgentCore quyết định gọi Retriever\
-3.  Hybrid Search API được gọi\
-4.  Chunks trả về\
-5.  LLM synthesize câu trả lời\
-6.  Response gửi về user
-
-------------------------------------------------------------------------
-
-### Example 2 --- Tool-augmented question
-
-1.  User hỏi về cost\
-2.  Agent reasoning step (Think tool)\
-3.  Agent quyết định gọi PostgreSQL tool\
-4.  Query executed\
-5.  Tool trả về data thật\
-6.  LLM format câu trả lời\
-7.  Response trả về user
-
-------------------------------------------------------------------------
-
 # Bonus A --- Observability Dashboard
 
 <img width="417" height="580" alt="image" src="https://github.com/user-attachments/assets/1fd6592e-46a4-4888-bd5a-407e1fe3de6b" />
@@ -263,13 +224,4 @@ Hiển thị rõ: - Decision-making - Tool selection logic - Intermediate
 reasoning
 
 ------------------------------------------------------------------------
-
-# Checklist trước khi nộp
-
--   [ ] Mỗi level có 1--2 screenshot
--   [ ] Có bằng chứng retrieve thật
--   [ ] Có bằng chứng tool call thật (L3 bắt buộc)
--   [ ] Không chỉ có output cuối
--   [ ] Logs readable, highlight phần quan trọng
-
 
