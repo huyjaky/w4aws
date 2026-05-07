@@ -234,7 +234,12 @@ Follow-up tham chiếu lượt trước → chứng minh memory hoạt động.
 
 # Bonus A --- Observability Dashboard
 
-> \[Chèn screenshot dashboard\]
+<img width="417" height="580" alt="image" src="https://github.com/user-attachments/assets/1fd6592e-46a4-4888-bd5a-407e1fe3de6b" />
+<img width="407" height="472" alt="image" src="https://github.com/user-attachments/assets/b98b0ddd-3aac-48d5-9d6d-d8640abd2ab5" />
+<img width="414" height="541" alt="image" src="https://github.com/user-attachments/assets/0e54d218-379f-4d92-9a01-8f903f8a9081" />
+<img width="415" height="466" alt="image" src="https://github.com/user-attachments/assets/9fa6be39-d886-4098-88d7-8cedab576582" />
+<img width="405" height="626" alt="image" src="https://github.com/user-attachments/assets/c854bc91-dfdb-45be-b2f1-565bc6a46a9a" />
+
 
 Dashboard hiển thị: - Retrieval step - Tool calls - LLM decision -
 Latency từng bước - Token usage
@@ -243,7 +248,11 @@ Latency từng bước - Token usage
 
 # Bonus B --- Agent Reasoning (Structured Investigation)
 
-> \[Chèn screenshot reasoning output\]
+<img width="417" height="565" alt="image" src="https://github.com/user-attachments/assets/c228a1a5-dfe5-472f-ba27-effc11db100a" />
+<img width="421" height="517" alt="image" src="https://github.com/user-attachments/assets/d559afca-7d53-4086-ba43-7050bd75d114" />
+<img width="405" height="403" alt="image" src="https://github.com/user-attachments/assets/69bf1d66-7811-46d1-94b9-aff665d730ad" />
+<img width="404" height="617" alt="image" src="https://github.com/user-attachments/assets/d157a918-203f-41bf-b776-0be7ce554809" />
+
 
 Ví dụ:
 
