@@ -90,6 +90,5 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 4. **Thực thi công cụ (Tool Invocation - Nếu có):** Nếu cần truy xuất dữ liệu để trả lời, LLM điều phối Agent gọi các tools tương ứng. Agent có thể truy vấn cơ sở dữ liệu qua `Postgresql tool`, tìm kiếm tài liệu dạng text qua `RAG`, hoặc lấy dữ liệu hệ thống thời gian thực qua nhóm `HTTP tools` (ví dụ: /metrics, /status). Dữ liệu thô từ tools được trả ngược lại cho LLM.
 5. **Tổng hợp & Trả kết quả (Output):** LLM tổng hợp và xử lý dữ liệu thu thập được từ các tools để tạo ra câu trả lời chính xác cuối cùng. Câu trả lời này được Agent chuyển đến node `Respond to Webhook` để trả kết quả về cho hệ thống hoặc người dùng đã gửi yêu cầu ban đầu.
 
-
-
+<video controls preload="metadata" width="100%"> <source src="/videos/myvideo.mp4" type="video/mp4"> <source src="/videos/2026-05-07 22-45-50.mkv" type="video/mkv"> </video>
 
