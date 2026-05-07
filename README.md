@@ -162,58 +162,31 @@ Ví dụ:
 <img width="929" height="245" alt="image" src="https://github.com/user-attachments/assets/7659b58b-3864-40e4-b69c-b00befa30636" />
 <img width="638" height="251" alt="image" src="https://github.com/user-attachments/assets/add2393c-226c-4fcc-9d2a-8eecea914166" />
 
-
-Log cần thể hiện rõ:
-
-    [Agent] Tool selected: postgresql.executeQuery
-    Query executed:
-    SELECT SUM(cost)
-    FROM billing
-    WHERE service = 'PaymentGW'
-    AND quarter = 'Q1';
-
-    Tool response:
-    16500
-
-Hoặc HTTP tool:
-
-    [Agent] Calling HTTP Tool: /metrics?service=PaymentGW
-    Response received:
-    { "Q1_cost": 16500 }
-
-
 ------------------------------------------------------------------------
 
 ## Level 4 --- Multi-turn Conversation + Memory (Nếu thực hiện)
 
 ### Screenshot Multi-turn Chat
 
+
+<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/b8ef7cf3-a59f-4cdc-ba0d-342875b95e62" />
+<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/94aff012-2af3-4bcb-aaca-9130c25a79a2" />
+-> thể hiện lịch sử chat trong session với AI và human làm chủ thể 
+
 <img width="1087" height="496" alt="image" src="https://github.com/user-attachments/assets/b8267f29-8bab-4c47-a5a2-39c628b6a31a" />
 <img width="1087" height="552" alt="image" src="https://github.com/user-attachments/assets/df37d8bb-289d-43fb-958d-f257759afd6f" />
 <img width="1073" height="412" alt="image" src="https://github.com/user-attachments/assets/4f19513f-5541-4348-abc1-08d3b0d39990" />
 <img width="1081" height="313" alt="image" src="https://github.com/user-attachments/assets/6e4170db-85dc-4706-b108-090dfb8967c7" />
 
-
-Ví dụ:
-
-User: Q1 cost của PaymentGW là bao nhiêu?\
-AI: \$16,500\
-User: So với Q2 thì sao?\
-AI: Q2 cao hơn 12%
-
-Follow-up tham chiếu lượt trước → chứng minh memory hoạt động.
-
 ------------------------------------------------------------------------
 
 ### Memory Strategy
+<img width="1089" height="802" alt="image" src="https://github.com/user-attachments/assets/27a5c639-8811-41da-875d-5e037c598201" />
 
 -   Sử dụng PostgreSQL làm persistent memory
 -   Lưu:
-    -   user_id
-    -   conversation_id
-    -   chat history
--   Agent inject lịch sử hội thoại vào prompt mỗi turn
--   Giới hạn số turn để tránh prompt overflow
+    -   session_id
+    -   message
 
 ------------------------------------------------------------------------
 
