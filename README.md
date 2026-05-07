@@ -52,6 +52,9 @@
   - `/incidents/{service_name}`: Lấy thông tin sự cố chi tiết của một dịch vụ cụ thể.<img width="1883" height="878" alt="image" src="https://github.com/user-attachments/assets/824655ff-b0c1-411f-97d6-42d9a71f1826" />
 
 
+# Section 3 - Decision Log
 
+
+# Section 4 - Per-Level Evidence
 
 
