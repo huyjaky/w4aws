@@ -53,7 +53,7 @@
 
 ## Danh sách component *Nạp RAG*
 
-# Section 4 --- Per-Level Evidence
+# Section 4 — Per-Level Evidence
 
 ------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@
 
 ### ✅ Câu trả lời đúng (Screenshot Output)
 
-<img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/4b99e3b5-615c-4c6a-b4b8-27f5cbcf7ef4" />
+<img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/d3cc6775-9bb8-4d45-b599-e890424bc798" />
 > Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
 > "Theo tài liệu ServicePolicy_v2.pdf...")
 
@@ -101,7 +101,8 @@ Ví dụ: - Doc A: API rate limit = 500\
 ------------------------------------------------------------------------
 
 ### 🔎 System xử lý conflict như thế nào?
-
+> \[Chụp ảnh config top k hybrid search của Rag\]
+> \[Giải quyết config 2 versions (improve system prompt như nào)\]
 -   Hybrid search trả về nhiều documents
 -   Agent sử dụng metadata (version / timestamp) để ưu tiên document mới
     hơn
@@ -124,7 +125,7 @@ Ví dụ log:
 
 ### ✅ Screenshot Output
 
-> \[Chèn screenshot câu trả lời có số liệu chính xác\]
+<img width="1909" height="964" alt="image" src="https://github.com/user-attachments/assets/681ddacd-f1e2-47e6-a44b-9fa4e7fe2e66" />
 
 Ví dụ:
 
@@ -134,7 +135,7 @@ Ví dụ:
 
 ### 🔧 Bằng chứng Tool được gọi
 
-> \[Chèn screenshot log hoặc dashboard\]
+<img width="547" height="511" alt="image" src="https://github.com/user-attachments/assets/751991df-3e03-4bfa-b4e1-82dd7327296d" />
 
 Log cần thể hiện rõ:
 
@@ -163,7 +164,11 @@ response.
 
 ### ✅ Screenshot Multi-turn Chat
 
-> \[Chèn screenshot 3--4 lượt hội thoại\]
+<img width="1087" height="496" alt="image" src="https://github.com/user-attachments/assets/b8267f29-8bab-4c47-a5a2-39c628b6a31a" />
+<img width="1087" height="552" alt="image" src="https://github.com/user-attachments/assets/df37d8bb-289d-43fb-958d-f257759afd6f" />
+<img width="1073" height="412" alt="image" src="https://github.com/user-attachments/assets/4f19513f-5541-4348-abc1-08d3b0d39990" />
+<img width="1081" height="313" alt="image" src="https://github.com/user-attachments/assets/6e4170db-85dc-4706-b108-090dfb8967c7" />
+
 
 Ví dụ:
 
