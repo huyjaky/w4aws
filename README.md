@@ -91,13 +91,14 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 5. **Tổng hợp & Trả kết quả (Output):** LLM tổng hợp và xử lý dữ liệu thu thập được từ các tools để tạo ra câu trả lời chính xác cuối cùng. Câu trả lời này được Agent chuyển đến node `Respond to Webhook` để trả kết quả về cho hệ thống hoặc người dùng đã gửi yêu cầu ban đầu.
 
 ## Video System đang chạy [Link video](https://drive.google.com/file/d/1E6ZxlYYH3vwFcjnJEXJ09ydyLLxNTi_0/view?usp=sharing)
+
 # Section 4 — Per-Level Evidence
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 1 --- Basic RAG Retrieval
+## Level 1 --- Basic RAG Retrieval
 
-### ✅ Câu trả lời đúng (Screenshot Output)
+### Câu trả lời đúng (Screenshot Output)
 
 <img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/d3cc6775-9bb8-4d45-b599-e890424bc798" />
 > Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
@@ -105,7 +106,7 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 
 ------------------------------------------------------------------------
 
-### 🔍 Bằng chứng Retrieval đã xảy ra
+### Bằng chứng Retrieval đã xảy ra
 
 > \[Chèn 1 screenshot log / dashboard\]
 
@@ -126,9 +127,9 @@ Ví dụ log:
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 2 --- Multi-document Synthesis / Conflict Resolution
+## Level 2 --- Multi-document Synthesis / Conflict Resolution
 
-### ✅ Screenshot Output
+### Screenshot Output
 
 <img width="1084" height="360" alt="image" src="https://github.com/user-attachments/assets/4d4c7afe-1416-47d9-860a-003e5533d290" />
 
@@ -138,7 +139,7 @@ Ví dụ: - Doc A: API rate limit = 500\
 
 ------------------------------------------------------------------------
 
-### 🔎 System xử lý conflict như thế nào?
+### System xử lý conflict như thế nào?
 > \[Chụp ảnh config top k hybrid search của Rag\]
 > \[Giải quyết config 2 versions (improve system prompt như nào)\]
 -   Hybrid search trả về nhiều documents
@@ -159,9 +160,9 @@ Ví dụ log:
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 3 --- Tool-Augmented Answer (Quan trọng nhất)
+## Level 3 --- Tool-Augmented Answer (Quan trọng nhất)
 
-### ✅ Screenshot Output
+### Screenshot Output
 
 <img width="1909" height="964" alt="image" src="https://github.com/user-attachments/assets/681ddacd-f1e2-47e6-a44b-9fa4e7fe2e66" />
 
@@ -171,7 +172,7 @@ Ví dụ:
 
 ------------------------------------------------------------------------
 
-### 🔧 Bằng chứng Tool được gọi
+### Bằng chứng Tool được gọi
 
 <img width="547" height="511" alt="image" src="https://github.com/user-attachments/assets/751991df-3e03-4bfa-b4e1-82dd7327296d" />
 
@@ -198,9 +199,9 @@ response.
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 4 --- Multi-turn Conversation + Memory (Nếu thực hiện)
+## Level 4 --- Multi-turn Conversation + Memory (Nếu thực hiện)
 
-### ✅ Screenshot Multi-turn Chat
+### Screenshot Multi-turn Chat
 
 <img width="1087" height="496" alt="image" src="https://github.com/user-attachments/assets/b8267f29-8bab-4c47-a5a2-39c628b6a31a" />
 <img width="1087" height="552" alt="image" src="https://github.com/user-attachments/assets/df37d8bb-289d-43fb-958d-f257759afd6f" />
@@ -219,7 +220,7 @@ Follow-up tham chiếu lượt trước → chứng minh memory hoạt động.
 
 ------------------------------------------------------------------------
 
-### 🧠 Memory Strategy
+### Memory Strategy
 
 -   Sử dụng PostgreSQL làm persistent memory
 -   Lưu:
@@ -305,7 +306,7 @@ reasoning
 
 ------------------------------------------------------------------------
 
-# ✅ Checklist trước khi nộp
+# Checklist trước khi nộp
 
 -   [ ] Mỗi level có 1--2 screenshot
 -   [ ] Có bằng chứng retrieve thật
