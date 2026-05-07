@@ -1,11 +1,11 @@
 # Section 1
 | Thông tin | Chi tiết |
 | :--- | :--- |
-| **Số nhóm** | [Điền số nhóm của bạn] |
+| **Số nhóm** | 10 |
 | **Tên thành viên** | [Điền tên các thành viên trong nhóm] |
-| **LLM** | [Ví dụ: Claude 3 Sonnet via Bedrock] |
-| **Embedding** | [Ví dụ: Claude 3 Sonnet via Bedrock] |
-| **Framework sử dụng** | [Ví dụ: LangChain / Bedrock Agents / raw API] |
+| **LLM** | Claude 4.6 |
+| **Embedding** | bge-m3|
+| **Framework sử dụng** | LangChain, N8N |
 
 ---
 
@@ -126,10 +126,11 @@ Ví dụ: - Doc A: API rate limit = 500
 ------------------------------------------------------------------------
 
 ### System xử lý conflict như thế nào?
+
 > \[Chụp ảnh config top k hybrid search của Rag\]
 > \[Giải quyết config 2 versions (improve system prompt như nào)\]
 -   Hybrid search trả về nhiều documents
--   Agent sử dụng metadata (version / timestamp) để ưu tiên document mới
+-   Agent sử dụng metadata (version / timestamp), tên file, nội dung để ưu tiên document mới
     hơn
 -   LLM được cung cấp cả hai context và được prompt yêu cầu resolve
     conflict
@@ -169,11 +170,6 @@ Ví dụ:
 
 ### Screenshot Multi-turn Chat
 
-
-<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/b8ef7cf3-a59f-4cdc-ba0d-342875b95e62" />
-<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/94aff012-2af3-4bcb-aaca-9130c25a79a2" />
--> thể hiện lịch sử chat trong session với AI và human làm chủ thể 
-
 <img width="1087" height="496" alt="image" src="https://github.com/user-attachments/assets/b8267f29-8bab-4c47-a5a2-39c628b6a31a" />
 <img width="1087" height="552" alt="image" src="https://github.com/user-attachments/assets/df37d8bb-289d-43fb-958d-f257759afd6f" />
 <img width="1073" height="412" alt="image" src="https://github.com/user-attachments/assets/4f19513f-5541-4348-abc1-08d3b0d39990" />
@@ -182,8 +178,12 @@ Ví dụ:
 ------------------------------------------------------------------------
 
 ### Memory Strategy
-<img width="1089" height="802" alt="image" src="https://github.com/user-attachments/assets/27a5c639-8811-41da-875d-5e037c598201" />
 
+<img width="1089" height="802" alt="image" src="https://github.com/user-attachments/assets/27a5c639-8811-41da-875d-5e037c598201" />
+<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/b8ef7cf3-a59f-4cdc-ba0d-342875b95e62" />
+<img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/94aff012-2af3-4bcb-aaca-9130c25a79a2" />
+
+- thể hiện lịch sử chat trong session với AI và human làm chủ thể rồi cho thẳng vào input của Agent
 -   Sử dụng PostgreSQL làm persistent memory
 -   Lưu:
     -   session_id
