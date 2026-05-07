@@ -20,7 +20,7 @@
 <img width="1802" height="318" alt="image" src="https://github.com/user-attachments/assets/64ce7a90-85cb-4935-bdac-883833f7e5bf" />
 
 
-## Danh sách component
+## Danh sách component *Agent*
 
 ### 1. Nhóm Trigger & Output (Luồng dữ liệu chính)
 - *Webhook (POST)*: Node nhận các yêu cầu HTTP POST từ các hệ thống bên ngoài để kích hoạt luồng xử lý, dùng để gọi AGENT.<img width="1871" height="863" alt="image" src="https://github.com/user-attachments/assets/d632d570-48fa-4e7c-b668-7ba1c2a6d171" />
@@ -51,7 +51,7 @@
   - `/incidents`: Lấy danh sách các sự cố đang xảy ra.<img width="1883" height="878" alt="image" src="https://github.com/user-attachments/assets/3707376d-95e8-49a3-a79e-b88c508f77f6" />
   - `/incidents/{service_name}`: Lấy thông tin sự cố chi tiết của một dịch vụ cụ thể.<img width="1883" height="878" alt="image" src="https://github.com/user-attachments/assets/824655ff-b0c1-411f-97d6-42d9a71f1826" />
 
-
+## Danh sách component *Nạp RAG*
 
 
 
