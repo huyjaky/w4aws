@@ -116,21 +116,31 @@
 
 ### 4.2.2. Cơ chế xử lý xung đột (Conflict Resolution)
 
-> *[Chèn ảnh cấu hình Top-K Hybrid Search của RAG tại đây]*
-> *[Chèn ảnh giải quyết conflict 2 versions (cách improve system prompt) tại đây]*
+<img width="1303" height="636" alt="image" src="https://github.com/user-attachments/assets/8c5fcfde-032c-4699-b680-0e97b44bdfb3" />
 
-*   **Cơ chế hoạt động:**
-    *   Hybrid search sẽ trả về nhiều documents có độ tương đồng cao.
-    *   Agent được cấu hình để sử dụng metadata (version / timestamp), tên file và nội dung để **ưu tiên document mới hơn**.
-    *   LLM được cung cấp cả hai context và được chỉ định rõ trong Prompt để tự động giải quyết xung đột (resolve conflict) dựa trên tính cập nhật.
+prompt để giải quyết 
+```markdown
+5. **Handle Temporal Data & Contradictions (CRITICAL):** The data package contains historical records, database metrics, multiple versions of documents over time, and live data. If you retrieve different answers or conflicting data:
+   - **Hierarchy of Truth:** For current operational metrics and system status, the `Live HTTP APIs` (`192.168.31.98`) are the absolute source of truth. The `Postgresql tool` represents historical aggregates, and `RAG` represents intended policies/architecture.
+   - **Show Evolution:** Do NOT ignore older data. You MUST present both the historical state and the current state to show the evolution.
+   - **Highlight Discrepancies:** If expected policies (`RAG`) or SLA targets (`Postgresql tool`) contradict actual live system metrics (`Live HTTP APIs`), highlight this discrepancy clearly.
+   - **Jitter Rule:** Live data from `Get_Service_Metrics` has a built-in ±5% jitter. Minor fluctuations are normal and should NOT be flagged as contradiction
+```
+<img width="325" height="433" alt="image" src="https://github.com/user-attachments/assets/9c0a38bd-0802-4f5c-bd1a-d10a38235d57" />
+
+
+*   **Cơ chế hoạt động (Conflict Resolution Mechanism):**
+    *   **Sàng lọc tài liệu (Hybrid Search & Filtering):** RAG sử dụng Hybrid Search kết hợp Payload Schema để lọc và trả về các tập tài liệu có độ tương đồng cao nhất.
+    *   **Ưu tiên tài liệu nội bộ (Document-level Routing):** Nếu xung đột xảy ra giữa các tài liệu văn bản (ví dụ: Policy v1 và v2), Agent được cấu hình để phân tích metadata (version, timestamp), tên file để **ưu tiên trích xuất dữ liệu từ tài liệu mới nhất**.
+    *   **Cây phân cấp độ tin cậy (Hierarchy of Truth):** Khi phát hiện xung đột chéo giữa các Tool, LLM được System Prompt chỉ định rõ quy tắc ưu tiên: **Live HTTP APIs** (Sự thật tuyệt đối ở thời gian thực) > **PostgreSQL** (Dữ liệu lịch sử) > **RAG** (Chính sách, kiến trúc lý thuyết).
+    *   **Tổng hợp & Đối chiếu (Evolution & Discrepancies):** Thay vì bỏ qua dữ liệu cũ, LLM được cấp toàn bộ Context và phải tự động giải quyết xung đột bằng cách: Trình bày sự thay đổi số liệu theo thời gian (Show Evolution) hoặc làm nổi bật sự mâu thuẫn (Highlight Discrepancies) để người dùng có cái nhìn toàn cảnh.
 
 > **Ví dụ Log:**
 > Retrieved:
 > - `service_policy_v1.pdf` (rate limit: 500)
 > - `service_policy_v2.pdf` (rate limit: 1000)
 > *LLM instructed to prioritize latest version*
-
-➡ **Kết luận:** Bằng chứng cho thấy hệ thống thực sự có khả năng lập luận đa tài liệu (Multi-doc reasoning).
+<img width="535" height="309" alt="image" src="https://github.com/user-attachments/assets/e11c5d93-d231-44e8-ad90-0fc2aef746eb" />
 
 ---
 
