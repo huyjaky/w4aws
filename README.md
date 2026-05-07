@@ -92,7 +92,7 @@ Ví dụ log:
 
 ### ✅ Screenshot Output
 
-> \[Chèn screenshot câu trả lời thể hiện synthesis đúng\]
+<img width="1084" height="360" alt="image" src="https://github.com/user-attachments/assets/4d4c7afe-1416-47d9-860a-003e5533d290" />
 
 Ví dụ: - Doc A: API rate limit = 500\
 - Doc B (newer version): API rate limit = 1000\
