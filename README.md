@@ -7,7 +7,7 @@
 | **LLM** | Claude 4.6 |
 | **Embedding** | bge-m3, BM-25 |
 | **Framework sử dụng** | LangChain, N8N |
-
+| **Link repo** | [link repo](https://github.com/huyjaky/w4aws) |
 ---
 
 > [!IMPORTANT]
