@@ -91,5 +91,226 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 5. **Tổng hợp & Trả kết quả (Output):** LLM tổng hợp và xử lý dữ liệu thu thập được từ các tools để tạo ra câu trả lời chính xác cuối cùng. Câu trả lời này được Agent chuyển đến node `Respond to Webhook` để trả kết quả về cho hệ thống hoặc người dùng đã gửi yêu cầu ban đầu.
 
 ## Video System đang chạy [Link video](https://drive.google.com/file/d/1E6ZxlYYH3vwFcjnJEXJ09ydyLLxNTi_0/view?usp=sharing)
+# Section 4 — Per-Level Evidence
+
+------------------------------------------------------------------------
+
+## 🔹 Level 1 --- Basic RAG Retrieval
+
+### ✅ Câu trả lời đúng (Screenshot Output)
+
+<img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/d3cc6775-9bb8-4d45-b599-e890424bc798" />
+> Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
+> "Theo tài liệu ServicePolicy_v2.pdf...")
+
+------------------------------------------------------------------------
+
+### 🔍 Bằng chứng Retrieval đã xảy ra
+
+> \[Chèn 1 screenshot log / dashboard\]
+
+**Bằng chứng cần thể hiện:** - System thực hiện retrieve từ Qdrant
+(Hybrid Search) - Query embedding được tạo - Top-k chunks được trả về -
+Metadata (source document, score) - Retrieved chunks được đưa vào prompt
+trước khi gọi LLM
+
+Ví dụ log:
+
+    [Retriever] Hybrid search executed
+    Query: "What is API rate limit?"
+    Top 3 chunks returned
+    Source: service_policy_v2.pdf
+    Score: 0.82
+
+➡ Chứng minh LLM không tự đoán mà đã nhận context thật từ RAG pipeline.
+
+------------------------------------------------------------------------
+
+## 🔹 Level 2 --- Multi-document Synthesis / Conflict Resolution
+
+### ✅ Screenshot Output
+
+<img width="1084" height="360" alt="image" src="https://github.com/user-attachments/assets/4d4c7afe-1416-47d9-860a-003e5533d290" />
+
+Ví dụ: - Doc A: API rate limit = 500\
+- Doc B (newer version): API rate limit = 1000\
+- System trả lời đúng: **1000**
+
+------------------------------------------------------------------------
+
+### 🔎 System xử lý conflict như thế nào?
+> \[Chụp ảnh config top k hybrid search của Rag\]
+> \[Giải quyết config 2 versions (improve system prompt như nào)\]
+-   Hybrid search trả về nhiều documents
+-   Agent sử dụng metadata (version / timestamp) để ưu tiên document mới
+    hơn
+-   LLM được cung cấp cả hai context và được prompt yêu cầu resolve
+    conflict
+
+Ví dụ log:
+
+    Retrieved:
+    - service_policy_v1.pdf (rate limit: 500)
+    - service_policy_v2.pdf (rate limit: 1000)
+
+    LLM instructed to prioritize latest version
+
+➡ Chứng minh system thực sự xử lý multi-doc reasoning.
+
+------------------------------------------------------------------------
+
+## 🔹 Level 3 --- Tool-Augmented Answer (Quan trọng nhất)
+
+### ✅ Screenshot Output
+
+<img width="1909" height="964" alt="image" src="https://github.com/user-attachments/assets/681ddacd-f1e2-47e6-a44b-9fa4e7fe2e66" />
+
+Ví dụ:
+
+> "PaymentGW Q1 cost = \$16,500"
+
+------------------------------------------------------------------------
+
+### 🔧 Bằng chứng Tool được gọi
+
+<img width="547" height="511" alt="image" src="https://github.com/user-attachments/assets/751991df-3e03-4bfa-b4e1-82dd7327296d" />
+
+Log cần thể hiện rõ:
+
+    [Agent] Tool selected: postgresql.executeQuery
+    Query executed:
+    SELECT SUM(cost)
+    FROM billing
+    WHERE service = 'PaymentGW'
+    AND quarter = 'Q1';
+
+    Tool response:
+    16500
+
+Hoặc HTTP tool:
+
+    [Agent] Calling HTTP Tool: /metrics?service=PaymentGW
+    Response received:
+    { "Q1_cost": 16500 }
+
+➡ Đây là bằng chứng quan trọng nhất: phải thấy tool call + real data
+response.
+
+------------------------------------------------------------------------
+
+## 🔹 Level 4 --- Multi-turn Conversation + Memory (Nếu thực hiện)
+
+### ✅ Screenshot Multi-turn Chat
+
+<img width="1087" height="496" alt="image" src="https://github.com/user-attachments/assets/b8267f29-8bab-4c47-a5a2-39c628b6a31a" />
+<img width="1087" height="552" alt="image" src="https://github.com/user-attachments/assets/df37d8bb-289d-43fb-958d-f257759afd6f" />
+<img width="1073" height="412" alt="image" src="https://github.com/user-attachments/assets/4f19513f-5541-4348-abc1-08d3b0d39990" />
+<img width="1081" height="313" alt="image" src="https://github.com/user-attachments/assets/6e4170db-85dc-4706-b108-090dfb8967c7" />
+
+
+Ví dụ:
+
+User: Q1 cost của PaymentGW là bao nhiêu?\
+AI: \$16,500\
+User: So với Q2 thì sao?\
+AI: Q2 cao hơn 12%
+
+Follow-up tham chiếu lượt trước → chứng minh memory hoạt động.
+
+------------------------------------------------------------------------
+
+### 🧠 Memory Strategy
+
+-   Sử dụng PostgreSQL làm persistent memory
+-   Lưu:
+    -   user_id
+    -   conversation_id
+    -   chat history
+-   Agent inject lịch sử hội thoại vào prompt mỗi turn
+-   Giới hạn số turn để tránh prompt overflow
+
+------------------------------------------------------------------------
+
+# Nếu sử dụng AgentCore
+
+## Architecture Responsibility
+
+  Thành phần                 AgentCore quản lý   Tự build
+  -------------------------- ------------------- ----------
+  Agent loop                 ✅                  
+  Tool orchestration         ✅                  
+  Custom Hybrid Search API                       ✅
+  PostgreSQL Memory                              ✅
+  Observability                                  ✅
+
+------------------------------------------------------------------------
+
+## Annotated Trace Logs
+
+### Example 1 --- RAG-only question
+
+1.  User gửi câu hỏi\
+2.  AgentCore quyết định gọi Retriever\
+3.  Hybrid Search API được gọi\
+4.  Chunks trả về\
+5.  LLM synthesize câu trả lời\
+6.  Response gửi về user
+
+------------------------------------------------------------------------
+
+### Example 2 --- Tool-augmented question
+
+1.  User hỏi về cost\
+2.  Agent reasoning step (Think tool)\
+3.  Agent quyết định gọi PostgreSQL tool\
+4.  Query executed\
+5.  Tool trả về data thật\
+6.  LLM format câu trả lời\
+7.  Response trả về user
+
+------------------------------------------------------------------------
+
+# Bonus A --- Observability Dashboard
+
+<img width="417" height="580" alt="image" src="https://github.com/user-attachments/assets/1fd6592e-46a4-4888-bd5a-407e1fe3de6b" />
+<img width="407" height="472" alt="image" src="https://github.com/user-attachments/assets/b98b0ddd-3aac-48d5-9d6d-d8640abd2ab5" />
+<img width="414" height="541" alt="image" src="https://github.com/user-attachments/assets/0e54d218-379f-4d92-9a01-8f903f8a9081" />
+<img width="415" height="466" alt="image" src="https://github.com/user-attachments/assets/9fa6be39-d886-4098-88d7-8cedab576582" />
+<img width="405" height="626" alt="image" src="https://github.com/user-attachments/assets/c854bc91-dfdb-45be-b2f1-565bc6a46a9a" />
+
+
+Dashboard hiển thị: - Retrieval step - Tool calls - LLM decision -
+Latency từng bước - Token usage
+
+------------------------------------------------------------------------
+
+# Bonus B --- Agent Reasoning (Structured Investigation)
+
+<img width="417" height="565" alt="image" src="https://github.com/user-attachments/assets/c228a1a5-dfe5-472f-ba27-effc11db100a" />
+<img width="421" height="517" alt="image" src="https://github.com/user-attachments/assets/d559afca-7d53-4086-ba43-7050bd75d114" />
+<img width="405" height="403" alt="image" src="https://github.com/user-attachments/assets/69bf1d66-7811-46d1-94b9-aff665d730ad" />
+<img width="404" height="617" alt="image" src="https://github.com/user-attachments/assets/d157a918-203f-41bf-b776-0be7ce554809" />
+
+
+Ví dụ:
+
+    Step 1: User asking about service cost
+    Step 2: Need real billing data
+    Step 3: Call PostgreSQL tool
+    Step 4: Compute aggregation
+    Step 5: Format response
+
+Hiển thị rõ: - Decision-making - Tool selection logic - Intermediate
+reasoning
+
+------------------------------------------------------------------------
+
+# ✅ Checklist trước khi nộp
+
+-   [ ] Mỗi level có 1--2 screenshot
+-   [ ] Có bằng chứng retrieve thật
+-   [ ] Có bằng chứng tool call thật (L3 bắt buộc)
+-   [ ] Không chỉ có output cuối
+-   [ ] Logs readable, highlight phần quan trọng
 
 
