@@ -61,7 +61,7 @@
 
 ### ✅ Câu trả lời đúng (Screenshot Output)
 
-> \[Chèn screenshot câu trả lời của system\]\
+<img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/4b99e3b5-615c-4c6a-b4b8-27f5cbcf7ef4" />
 > Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
 > "Theo tài liệu ServicePolicy_v2.pdf...")
 
