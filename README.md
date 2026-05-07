@@ -17,7 +17,8 @@
 <img width="1581" height="734" alt="image" src="https://github.com/user-attachments/assets/6114221f-3fdc-46ae-b578-4cea0340a48f" />
 
 ### Nạp RAG 
-<img width="1802" height="318" alt="image" src="https://github.com/user-attachments/assets/64ce7a90-85cb-4935-bdac-883833f7e5bf" />
+<img width="1814" height="381" alt="image" src="https://github.com/user-attachments/assets/3512dee0-915b-4afc-be44-f4d1be0a176c" />
+<img width="1386" height="526" alt="image" src="https://github.com/user-attachments/assets/fe9f8c62-cec5-499f-b8f8-8b7b315a2969" />
 
 
 ## Danh sách component *Agent*
@@ -53,13 +54,51 @@
 
 ## Danh sách component *Nạp RAG*
 
+### 1. Khởi tạo & Lấy dữ liệu (Trigger & Input)
+- **Webhook1 (POST):** Điểm neo (Trigger) nhận yêu cầu HTTP POST để bắt đầu luồng xử lý nạp dữ liệu.<img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/079c5cd3-40ba-4fc1-ad87-c34bb481c961" />
+
+- **Read/Write Files from Disk (Read File(s) From Disk):** Quét và đọc các tệp tài liệu từ ổ đĩa cục bộ để chuẩn bị xử lý.<img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/157d9ef4-d2c1-49a3-88d2-e1d63a90daed" />
+
+- **Loop Over Items:** Node tạo vòng lặp (iterator). Nó nhận danh sách các file từ bước trước và phân nhánh quá trình xử lý: đưa từng file vào nhánh `loop` để xử lý chi tiết, và chuyển sang nhánh `done` khi đã duyệt qua hết tất cả các file.<img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/444f0db0-e630-470d-8fca-f63f8aec02e4" />
+
+- 
+### 2. Xử lý dữ liệu văn bản 
+- **Getting text from files (Extract From Text File):** Trích xuất nội dung chữ (raw text) từ tệp tài liệu đang được lặp.<img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/d0c38f42-4082-43db-83eb-f31b8ba8a2c6" />
+
+- **Augment data:** Nút này (thường chứa script) dùng để gán thêm siêu dữ liệu (metadata) hoặc làm giàu thông tin cho văn bản, ví dụ như thêm tên nguồn, ngày tạo, hoặc phân loại tài liệu.
+- **Chunking:** Cắt nội dung văn bản dài thành các đoạn nhỏ hơn (chunks). (token: 1024, overlap: 200)
+- **Limit:** Giới hạn số lượng item đi qua luồng. <img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/c915fa5b-018c-41c1-a309-8b82fe7177bb" />
+
+### 3. Vector hóa & Lưu trữ
+* **Vector Store Processor:** Xử lý các chunk văn bản cùng với metadata tương ứng (như đường nối chỉ ra). Nút này đóng vai trò chuẩn bị định dạng dữ liệu (hoặc kết nối mô hình embedding) trước khi nạp vào cơ sở dữ liệu vector. <img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/1b2c900c-12d7-46f9-beff-3590f09212f9" />
+
+* **Aggregate:** Gom nhóm (batch) các item riêng lẻ lại thành một mảng (array) lớn. Việc này giúp giảm số lượng request gửi đi ở bước tiếp theo, tối ưu hóa hiệu suất mạng.<img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/022da3a0-b6ac-4744-9d78-dcc4b3ce0f5b" />
+
+* **Upsert (POST):** Thực hiện một HTTP Request (địa chỉ IP nội bộ `192.168.31...`) để chèn mới hoặc cập nhật (upsert) hàng loạt các chunk/vector dữ liệu vào Vector Database (QDrant). Sau khi hoàn tất, luồng sẽ quay ngược lại **Loop Over Items** để tiếp tục với file tiếp theo.<img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/df301229-69cf-4b6c-a3e4-91bac9a4ffe4" />
+
+### 4. Dọn dẹp & Phản hồi (Nhánh `done`)
+- **mv files:** Xử lý hậu kỳ sau khi tất cả các tệp đã được vector hóa xong. Thường dùng để di chuyển (move) các file gốc sang một thư mục khác (như `archived` hoặc `processed`) để tránh việc nạp trùng lặp trong tương lai.
+- **Respond to Webhook1:** Trả về mã trạng thái HTTP (ví dụ: 200 OK) cho hệ thống đã gọi Webhook ban đầu, xác nhận rằng toàn bộ quá trình xử lý và nạp dữ liệu đã hoàn tất thành công.<img width="1888" height="876" alt="image" src="https://github.com/user-attachments/assets/b26e6f2f-48e9-4489-bf13-4d96973857af" />
+
+Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết được thiết kế dựa trên sơ đồ kiến trúc của bạn. Bạn có thể copy nội dung này và dán trực tiếp vào mục **3. Data Flow** trong Section 2 của file Evidence Pack.
+
+## Data flow
+
+1. **Tiếp nhận yêu cầu (Input):** Dữ liệu đầu vào đi vào hệ thống thông qua `Webhook` (từ các hệ thống bên ngoài) hoặc trigger `When chat message received` (từ giao diện người dùng).
+2. **Xử lý ngữ cảnh (Context & Memory):** `AI Agent` tiếp nhận yêu cầu và ngay lập tức truy vấn component `Memory` để lấy lịch sử các lượt hội thoại trước đó, tạo chuỗi ngữ cảnh đầy đủ cho câu hỏi hiện tại.
+3. **Phân tích & Lập kế hoạch (Reasoning):** Agent định tuyến yêu cầu cùng ngữ cảnh đến LLM (`claude opus 4.6`). LLM sẽ phân tích ý định của người dùng và quyết định xem có thể trả lời trực tiếp hay cần sử dụng công cụ (Tool). Component `Think` có thể được kích hoạt ở bước này để thiết lập các bước tư duy logic cho các truy vấn phức tạp.
+4. **Thực thi công cụ (Tool Invocation - Nếu có):** Nếu cần truy xuất dữ liệu để trả lời, LLM điều phối Agent gọi các tools tương ứng. Agent có thể truy vấn cơ sở dữ liệu qua `Postgresql tool`, tìm kiếm tài liệu dạng text qua `RAG`, hoặc lấy dữ liệu hệ thống thời gian thực qua nhóm `HTTP tools` (ví dụ: /metrics, /status). Dữ liệu thô từ tools được trả ngược lại cho LLM.
+5. **Tổng hợp & Trả kết quả (Output):** LLM tổng hợp và xử lý dữ liệu thu thập được từ các tools để tạo ra câu trả lời chính xác cuối cùng. Câu trả lời này được Agent chuyển đến node `Respond to Webhook` để trả kết quả về cho hệ thống hoặc người dùng đã gửi yêu cầu ban đầu.
+
+## Video System đang chạy [Link video](https://drive.google.com/file/d/1E6ZxlYYH3vwFcjnJEXJ09ydyLLxNTi_0/view?usp=sharing)
+
 # Section 4 — Per-Level Evidence
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 1 --- Basic RAG Retrieval
+## Level 1 --- Basic RAG Retrieval
 
-### ✅ Câu trả lời đúng (Screenshot Output)
+### Câu trả lời đúng (Screenshot Output)
 
 <img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/d3cc6775-9bb8-4d45-b599-e890424bc798" />
 > Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
@@ -67,7 +106,7 @@
 
 ------------------------------------------------------------------------
 
-### 🔍 Bằng chứng Retrieval đã xảy ra
+### Bằng chứng Retrieval đã xảy ra
 
 > \[Chèn 1 screenshot log / dashboard\]
 
@@ -88,9 +127,9 @@ Ví dụ log:
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 2 --- Multi-document Synthesis / Conflict Resolution
+## Level 2 --- Multi-document Synthesis / Conflict Resolution
 
-### ✅ Screenshot Output
+### Screenshot Output
 
 <img width="1084" height="360" alt="image" src="https://github.com/user-attachments/assets/4d4c7afe-1416-47d9-860a-003e5533d290" />
 
@@ -100,7 +139,7 @@ Ví dụ: - Doc A: API rate limit = 500\
 
 ------------------------------------------------------------------------
 
-### 🔎 System xử lý conflict như thế nào?
+### System xử lý conflict như thế nào?
 > \[Chụp ảnh config top k hybrid search của Rag\]
 > \[Giải quyết config 2 versions (improve system prompt như nào)\]
 -   Hybrid search trả về nhiều documents
@@ -121,9 +160,9 @@ Ví dụ log:
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 3 --- Tool-Augmented Answer (Quan trọng nhất)
+## Level 3 --- Tool-Augmented Answer (Quan trọng nhất)
 
-### ✅ Screenshot Output
+### Screenshot Output
 
 <img width="1909" height="964" alt="image" src="https://github.com/user-attachments/assets/681ddacd-f1e2-47e6-a44b-9fa4e7fe2e66" />
 
@@ -133,7 +172,7 @@ Ví dụ:
 
 ------------------------------------------------------------------------
 
-### 🔧 Bằng chứng Tool được gọi
+### Bằng chứng Tool được gọi
 
 <img width="547" height="511" alt="image" src="https://github.com/user-attachments/assets/751991df-3e03-4bfa-b4e1-82dd7327296d" />
 
@@ -160,9 +199,9 @@ response.
 
 ------------------------------------------------------------------------
 
-## 🔹 Level 4 --- Multi-turn Conversation + Memory (Nếu thực hiện)
+## Level 4 --- Multi-turn Conversation + Memory (Nếu thực hiện)
 
-### ✅ Screenshot Multi-turn Chat
+### Screenshot Multi-turn Chat
 
 <img width="1087" height="496" alt="image" src="https://github.com/user-attachments/assets/b8267f29-8bab-4c47-a5a2-39c628b6a31a" />
 <img width="1087" height="552" alt="image" src="https://github.com/user-attachments/assets/df37d8bb-289d-43fb-958d-f257759afd6f" />
@@ -181,7 +220,7 @@ Follow-up tham chiếu lượt trước → chứng minh memory hoạt động.
 
 ------------------------------------------------------------------------
 
-### 🧠 Memory Strategy
+### Memory Strategy
 
 -   Sử dụng PostgreSQL làm persistent memory
 -   Lưu:
@@ -267,7 +306,7 @@ reasoning
 
 ------------------------------------------------------------------------
 
-# ✅ Checklist trước khi nộp
+# Checklist trước khi nộp
 
 -   [ ] Mỗi level có 1--2 screenshot
 -   [ ] Có bằng chứng retrieve thật
