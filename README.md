@@ -183,9 +183,13 @@ Ví dụ:
 <img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/b8ef7cf3-a59f-4cdc-ba0d-342875b95e62" />
 <img width="1173" height="532" alt="image" src="https://github.com/user-attachments/assets/94aff012-2af3-4bcb-aaca-9130c25a79a2" />
 
-- thể hiện lịch sử chat trong session với AI và human làm chủ thể rồi cho thẳng vào input của Agent
--   Sử dụng PostgreSQL làm persistent memory
--   Lưu:
+chiến lược:
+- Khi có request tới, bạn truyền Session ID vào node PostgreSQL Chat Memory.
+- n8n kết nối với PostgreSQL, tìm kiếm trong bảng dữ liệu tất cả các tin nhắn có chứa Session ID tương ứng.
+- AI nhận được toàn bộ ngữ cảnh cũ và sinh ra câu trả lời cho câu hỏi mới.
+- Cặp câu hỏi/câu trả lời mới được n8n tự động lưu lại vào PostgreSQL cùng với Session ID đó.
+- Sử dụng PostgreSQL làm persistent memory
+- Lưu:
     -   session_id
     -   message
 
