@@ -170,18 +170,20 @@
 
 ## 5.1. Bonus A — Observability Dashboard
 
-<img width="417" height="580" alt="image" src="https://github.com/user-attachments/assets/1fd6592e-46a4-4888-bd5a-407e1fe3de6b" />
-<img width="407" height="472" alt="image" src="https://github.com/user-attachments/assets/b98b0ddd-3aac-48d5-9d6d-d8640abd2ab5" />
-<img width="414" height="541" alt="image" src="https://github.com/user-attachments/assets/0e54d218-379f-4d92-9a01-8f903f8a9081" />
-<img width="415" height="466" alt="image" src="https://github.com/user-attachments/assets/9fa6be39-d886-4098-88d7-8cedab576582" />
-<img width="405" height="626" alt="image" src="https://github.com/user-attachments/assets/c854bc91-dfdb-45be-b2f1-565bc6a46a9a" />
+<img width="1642" height="515" alt="image" src="https://github.com/user-attachments/assets/9e0ad0e4-b605-4988-8ab8-2067b6e9b81a" />
+<img width="1628" height="697" alt="image" src="https://github.com/user-attachments/assets/83047fcd-4c82-4263-81bc-c9f5ac10943e" />
+<img width="1628" height="697" alt="image" src="https://github.com/user-attachments/assets/fa67a210-9360-49e8-a0c5-c1b0b95cfd49" />
+<img width="1628" height="697" alt="image" src="https://github.com/user-attachments/assets/5eb944dd-a420-415c-8290-84c89626ec49" />
+<img width="1628" height="697" alt="image" src="https://github.com/user-attachments/assets/6f76dfcb-9b4a-4891-af5e-a38700ca7350" />
+<img width="1628" height="697" alt="image" src="https://github.com/user-attachments/assets/b2c411f6-7ed5-464b-8275-87b790fb660a" />
+<img width="1628" height="697" alt="image" src="https://github.com/user-attachments/assets/97dbb577-92b4-42e7-a1c9-f68f24272130" />
 
 **Dashboard hiển thị các thông số:**
 *   Retrieval step
 *   Tool calls
 *   LLM decision
 *   Latency từng bước (Độ trễ)
-
+*   Sô token
 ---
 
 ## 5.2. Bonus B — Agent Reasoning (Structured Investigation)
