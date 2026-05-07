@@ -108,7 +108,10 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 
 ### Bằng chứng Retrieval đã xảy ra
 
-> \[Chèn 1 screenshot log / dashboard\]
+- gọi embedding <img width="1047" height="135" alt="image" src="https://github.com/user-attachments/assets/dcd7eeff-6720-454f-87ef-278837287c7d" />
+<img width="695" height="778" alt="image" src="https://github.com/user-attachments/assets/7e47e7d9-d4c4-4f41-8ee0-2732b4a193b3" />
+<img width="643" height="186" alt="image" src="https://github.com/user-attachments/assets/e0b2862f-135a-4b9b-b063-912d451ceb8f" />
+
 
 **Bằng chứng cần thể hiện:** - System thực hiện retrieve từ Qdrant
 (Hybrid Search) - Query embedding được tạo - Top-k chunks được trả về -
