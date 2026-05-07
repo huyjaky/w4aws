@@ -101,8 +101,6 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 ### Câu trả lời đúng (Screenshot Output)
 
 <img width="1043" height="435" alt="image" src="https://github.com/user-attachments/assets/d3cc6775-9bb8-4d45-b599-e890424bc798" />
-> Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
-> "Theo tài liệu ServicePolicy_v2.pdf...")
 
 ------------------------------------------------------------------------
 
@@ -112,22 +110,6 @@ Dưới đây là phần mô tả Data Flow (Luồng dữ liệu) chi tiết đ�
 <img width="695" height="778" alt="image" src="https://github.com/user-attachments/assets/7e47e7d9-d4c4-4f41-8ee0-2732b4a193b3" />
 <img width="643" height="186" alt="image" src="https://github.com/user-attachments/assets/e0b2862f-135a-4b9b-b063-912d451ceb8f" />
 
-
-**Bằng chứng cần thể hiện:** - System thực hiện retrieve từ Qdrant
-(Hybrid Search) - Query embedding được tạo - Top-k chunks được trả về -
-Metadata (source document, score) - Retrieved chunks được đưa vào prompt
-trước khi gọi LLM
-
-Ví dụ log:
-
-    [Retriever] Hybrid search executed
-    Query: "What is API rate limit?"
-    Top 3 chunks returned
-    Source: service_policy_v2.pdf
-    Score: 0.82
-
-➡ Chứng minh LLM không tự đoán mà đã nhận context thật từ RAG pipeline.
-
 ------------------------------------------------------------------------
 
 ## Level 2 --- Multi-document Synthesis / Conflict Resolution
@@ -136,8 +118,8 @@ Ví dụ log:
 
 <img width="1084" height="360" alt="image" src="https://github.com/user-attachments/assets/4d4c7afe-1416-47d9-860a-003e5533d290" />
 
-Ví dụ: - Doc A: API rate limit = 500\
-- Doc B (newer version): API rate limit = 1000\
+Ví dụ: - Doc A: API rate limit = 500
+- Doc B (newer version): API rate limit = 1000
 - System trả lời đúng: **1000**
 
 ------------------------------------------------------------------------
@@ -177,7 +159,9 @@ Ví dụ:
 
 ### Bằng chứng Tool được gọi
 
-<img width="547" height="511" alt="image" src="https://github.com/user-attachments/assets/751991df-3e03-4bfa-b4e1-82dd7327296d" />
+<img width="929" height="245" alt="image" src="https://github.com/user-attachments/assets/7659b58b-3864-40e4-b69c-b00befa30636" />
+<img width="638" height="251" alt="image" src="https://github.com/user-attachments/assets/add2393c-226c-4fcc-9d2a-8eecea914166" />
+
 
 Log cần thể hiện rõ:
 
@@ -197,8 +181,6 @@ Hoặc HTTP tool:
     Response received:
     { "Q1_cost": 16500 }
 
-➡ Đây là bằng chứng quan trọng nhất: phải thấy tool call + real data
-response.
 
 ------------------------------------------------------------------------
 
