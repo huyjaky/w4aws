@@ -53,5 +53,212 @@
 
 ## Danh sách component *Nạp RAG*
 
+# Section 4 --- Per-Level Evidence
+
+------------------------------------------------------------------------
+
+## 🔹 Level 1 --- Basic RAG Retrieval
+
+### ✅ Câu trả lời đúng (Screenshot Output)
+
+> \[Chèn screenshot câu trả lời của system\]\
+> Ví dụ: Câu trả lời có **trích dẫn source document** rõ ràng (ví dụ:
+> "Theo tài liệu ServicePolicy_v2.pdf...")
+
+------------------------------------------------------------------------
+
+### 🔍 Bằng chứng Retrieval đã xảy ra
+
+> \[Chèn 1 screenshot log / dashboard\]
+
+**Bằng chứng cần thể hiện:** - System thực hiện retrieve từ Qdrant
+(Hybrid Search) - Query embedding được tạo - Top-k chunks được trả về -
+Metadata (source document, score) - Retrieved chunks được đưa vào prompt
+trước khi gọi LLM
+
+Ví dụ log:
+
+    [Retriever] Hybrid search executed
+    Query: "What is API rate limit?"
+    Top 3 chunks returned
+    Source: service_policy_v2.pdf
+    Score: 0.82
+
+➡ Chứng minh LLM không tự đoán mà đã nhận context thật từ RAG pipeline.
+
+------------------------------------------------------------------------
+
+## 🔹 Level 2 --- Multi-document Synthesis / Conflict Resolution
+
+### ✅ Screenshot Output
+
+> \[Chèn screenshot câu trả lời thể hiện synthesis đúng\]
+
+Ví dụ: - Doc A: API rate limit = 500\
+- Doc B (newer version): API rate limit = 1000\
+- System trả lời đúng: **1000**
+
+------------------------------------------------------------------------
+
+### 🔎 System xử lý conflict như thế nào?
+
+-   Hybrid search trả về nhiều documents
+-   Agent sử dụng metadata (version / timestamp) để ưu tiên document mới
+    hơn
+-   LLM được cung cấp cả hai context và được prompt yêu cầu resolve
+    conflict
+
+Ví dụ log:
+
+    Retrieved:
+    - service_policy_v1.pdf (rate limit: 500)
+    - service_policy_v2.pdf (rate limit: 1000)
+
+    LLM instructed to prioritize latest version
+
+➡ Chứng minh system thực sự xử lý multi-doc reasoning.
+
+------------------------------------------------------------------------
+
+## 🔹 Level 3 --- Tool-Augmented Answer (Quan trọng nhất)
+
+### ✅ Screenshot Output
+
+> \[Chèn screenshot câu trả lời có số liệu chính xác\]
+
+Ví dụ:
+
+> "PaymentGW Q1 cost = \$16,500"
+
+------------------------------------------------------------------------
+
+### 🔧 Bằng chứng Tool được gọi
+
+> \[Chèn screenshot log hoặc dashboard\]
+
+Log cần thể hiện rõ:
+
+    [Agent] Tool selected: postgresql.executeQuery
+    Query executed:
+    SELECT SUM(cost)
+    FROM billing
+    WHERE service = 'PaymentGW'
+    AND quarter = 'Q1';
+
+    Tool response:
+    16500
+
+Hoặc HTTP tool:
+
+    [Agent] Calling HTTP Tool: /metrics?service=PaymentGW
+    Response received:
+    { "Q1_cost": 16500 }
+
+➡ Đây là bằng chứng quan trọng nhất: phải thấy tool call + real data
+response.
+
+------------------------------------------------------------------------
+
+## 🔹 Level 4 --- Multi-turn Conversation + Memory (Nếu thực hiện)
+
+### ✅ Screenshot Multi-turn Chat
+
+> \[Chèn screenshot 3--4 lượt hội thoại\]
+
+Ví dụ:
+
+User: Q1 cost của PaymentGW là bao nhiêu?\
+AI: \$16,500\
+User: So với Q2 thì sao?\
+AI: Q2 cao hơn 12%
+
+Follow-up tham chiếu lượt trước → chứng minh memory hoạt động.
+
+------------------------------------------------------------------------
+
+### 🧠 Memory Strategy
+
+-   Sử dụng PostgreSQL làm persistent memory
+-   Lưu:
+    -   user_id
+    -   conversation_id
+    -   chat history
+-   Agent inject lịch sử hội thoại vào prompt mỗi turn
+-   Giới hạn số turn để tránh prompt overflow
+
+------------------------------------------------------------------------
+
+# Nếu sử dụng AgentCore
+
+## Architecture Responsibility
+
+  Thành phần                 AgentCore quản lý   Tự build
+  -------------------------- ------------------- ----------
+  Agent loop                 ✅                  
+  Tool orchestration         ✅                  
+  Custom Hybrid Search API                       ✅
+  PostgreSQL Memory                              ✅
+  Observability                                  ✅
+
+------------------------------------------------------------------------
+
+## Annotated Trace Logs
+
+### Example 1 --- RAG-only question
+
+1.  User gửi câu hỏi\
+2.  AgentCore quyết định gọi Retriever\
+3.  Hybrid Search API được gọi\
+4.  Chunks trả về\
+5.  LLM synthesize câu trả lời\
+6.  Response gửi về user
+
+------------------------------------------------------------------------
+
+### Example 2 --- Tool-augmented question
+
+1.  User hỏi về cost\
+2.  Agent reasoning step (Think tool)\
+3.  Agent quyết định gọi PostgreSQL tool\
+4.  Query executed\
+5.  Tool trả về data thật\
+6.  LLM format câu trả lời\
+7.  Response trả về user
+
+------------------------------------------------------------------------
+
+# Bonus A --- Observability Dashboard
+
+> \[Chèn screenshot dashboard\]
+
+Dashboard hiển thị: - Retrieval step - Tool calls - LLM decision -
+Latency từng bước - Token usage
+
+------------------------------------------------------------------------
+
+# Bonus B --- Agent Reasoning (Structured Investigation)
+
+> \[Chèn screenshot reasoning output\]
+
+Ví dụ:
+
+    Step 1: User asking about service cost
+    Step 2: Need real billing data
+    Step 3: Call PostgreSQL tool
+    Step 4: Compute aggregation
+    Step 5: Format response
+
+Hiển thị rõ: - Decision-making - Tool selection logic - Intermediate
+reasoning
+
+------------------------------------------------------------------------
+
+# ✅ Checklist trước khi nộp
+
+-   [ ] Mỗi level có 1--2 screenshot
+-   [ ] Có bằng chứng retrieve thật
+-   [ ] Có bằng chứng tool call thật (L3 bắt buộc)
+-   [ ] Không chỉ có output cuối
+-   [ ] Logs readable, highlight phần quan trọng
 
 
