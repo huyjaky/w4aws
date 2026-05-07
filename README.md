@@ -1,11 +1,20 @@
 # Section 1
 | Thông tin | Chi tiết |
 | :--- | :--- |
-| **Số nhóm** | [Điền số nhóm của bạn] |
-| **Tên thành viên** | [Điền tên các thành viên trong nhóm] |
-| **LLM** | [Ví dụ: Claude 3 Sonnet via Bedrock] |
-| **Embedding** | [Ví dụ: Claude 3 Sonnet via Bedrock] |
-| **Framework sử dụng** | [Ví dụ: LangChain / Bedrock Agents / raw API] |
+| **Số nhóm** | GROUP 10 |
+| **Tên thành viên** | 
+1. XB-DN26-001 — Lê Trần Tuấn Khanh
+2. XB-DN26-009 — Trần Mạnh Trường
+3. XB-DN26-048 — Trần Mạnh Cường
+4. XB-DN26-052 — Nguyễn Đức Hảo
+5. XB-DN26-057 — Lê Văn Hải
+6. XB-DN26-078 — Phan Đức Huy
+7. XB-DN26-082 — Lê Viết Quốc Hưng
+8. XB-DN26-129 — Huỳnh Xuân Hậu
+9. XB-DN26-131 — Nguyễn Thị Mến
+10. XB-DN26-132 — Trần Quốc Hùng |
+| **LLM sử dụng** | anthropic.claude-opus-4-6-v1 |
+| **Framework sử dụng** | n8n / Bedrock |
 
 ---
 
