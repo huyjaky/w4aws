@@ -10,6 +10,10 @@
 
 ---
 
+> [!IMPORTANT]
+> **Quan trọng:**
+> Mọi file code, prompt đều được để trong repo này. Đặt biệt chú ý file `code/agent-tool/RAG.py`, `code/agent-tool/upsert-vector.py` để có thể hiểu cách hoạt động của Hybrid Search
+
 # 2. Tổng quan kiến trúc (Architecture Overview)
 
 ## 2.1. Sơ đồ kiến trúc (Architecture Diagram)
