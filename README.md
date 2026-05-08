@@ -93,7 +93,7 @@
 
 ---
 
-# Section 3 — Decision Log
+# 3. Decision Log
 
 ### 1. Phương thức truy xuất dữ liệu hệ thống (Metrics/Incidents)
 *   **Lựa chọn:** Thay vì cấp quyền truy cập thẳng vào cơ sở dữ liệu SQL, nhóm quyết định xây dựng các **HTTP Request tools** trỏ tới các API endpoints nội bộ (như `/services`, `/status`, `/metrics`) để Agent giao tiếp.
