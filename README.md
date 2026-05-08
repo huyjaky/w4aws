@@ -246,3 +246,10 @@ prompt để giải quyết
 *   Decision-making (Quá trình ra quyết định)
 *   Tool selection logic (Logic chọn công cụ tương ứng)
 *   Intermediate reasoning (Các bước tư duy trung gian)
+
+---
+
+## 5.3 Bonus C — Data Operations
+
+<img width="1184" height="510" alt="image" src="https://github.com/user-attachments/assets/36411a47-abdc-4de6-99ee-2d148281be83" />
+
