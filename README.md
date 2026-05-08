@@ -91,6 +91,29 @@
 
 ---
 
+# Section 3 — Decision Log
+
+### 1. Phương thức truy xuất dữ liệu hệ thống (Metrics/Incidents)
+*   **Lựa chọn:** Thay vì cấp quyền truy cập thẳng vào cơ sở dữ liệu SQL, nhóm quyết định xây dựng các **HTTP Request tools** trỏ tới các API endpoints nội bộ (như `/services`, `/status`, `/metrics`) để Agent giao tiếp.
+*   **Bài học rút ra:** Việc đóng gói dữ liệu thành các phản hồi JSON chuẩn hóa qua API giúp Claude 4.6 hiểu ngữ cảnh chính xác hơn rất nhiều. Cơ chế này cũng giống như một "bức tường" bảo mật, ngăn không cho Agent vô tình can thiệp quá sâu hay chạy các lệnh nguy hiểm ảnh hưởng đến hệ thống thực tế.
+*   **Điều không hoạt động:** Ban đầu, chúng tôi thử cấp trực tiếp *SQL Database Tool* để Agent tự do tạo và chạy query. Nhưng thực tế là cấu trúc database vận hành khá phức tạp. Agent thỉnh thoảng lại sinh ra những câu query sai logic, dẫn đến việc bị timeout hoặc ngốn quá nhiều token vô ích. Cuối cùng, giải pháp tối ưu nhất là chuyển sang dùng các *HTTP tools* với endpoint được định nghĩa sẵn, vừa ổn định lại vừa đảm bảo bảo mật tuyệt đối.
+
+---
+
+### 2. Chiến lược xử lý nạp dữ liệu và truy xuất RAG (Data Ingestion & Retrieval)
+*   **Lựa chọn:** Xây dựng một pipeline nạp dữ liệu (Ingestion) kết hợp bước làm giàu siêu dữ liệu (Metadata Augmentation) trước khi chunking, đi kèm với cơ chế truy xuất **Hybrid Search kết hợp Payload Filtering** trên Qdrant.
+*   **Bài học rút ra:** Trong hệ thống RAG, đầu vào quyết định tất cả. Các tài liệu IT (API docs, sơ đồ kiến trúc, policy) rất dễ mất ngữ cảnh nếu chỉ bị cắt nhỏ một cách máy móc. Việc chủ động gán thêm siêu dữ liệu (như `service_name`, `version`, `doc_type`) ngay từ khâu nạp giúp Agent có thể dùng bộ lọc ở khâu truy xuất để loại ngay các tài liệu cũ hoặc sai dịch vụ. Nhờ vậy, LLM chỉ cần tập trung xử lý phần context "sạch" nhất.
+*   **Điều không hoạt động:** Khó khăn lớn nhất và mất thời gian nhất của nhóm nằm ở khâu code xử lý luồng nạp dữ liệu và cấu hình mô hình embedding. Ban đầu, khi tự viết script bóc tách văn bản, hệ thống liên tục gặp lỗi parse sai cấu trúc tài liệu IT (vốn chứa nhiều code block và bảng biểu), kéo theo lỗi sập luồng (timeout) khi gọi API embedding cho lượng lớn văn bản. Thêm vào đó, mô hình embedding ban đầu cũng "ngợp" trước các từ lóng, mã lỗi nội bộ, dẫn đến việc vector hóa bị sai lệch ý nghĩa. Để khắc phục, chúng tôi phải cấu trúc lại code pipeline: sử dụng các node chuẩn hóa của n8n để xử lý đa luồng tốt hơn, đồng thời chuyển sang mô hình embedding mạnh hơn (bge-m3) kết hợp thuật toán BM-25 (Hybrid Search) để không bỏ lọt bất kỳ từ khóa kỹ thuật nào.
+
+---
+
+### 3. Chiến lược quản lý Context & Memory
+*   **Lựa chọn:** Sử dụng **PostgreSQL làm Persistent Memory** (Bộ nhớ liên tục) thay vì dùng Window Buffer Memory mặc định trên RAM của n8n. 
+*   **Bài học rút ra:** Khi làm việc với quy trình xử lý sự cố (Incident Response), Agent cần phải xâu chuỗi được toàn bộ thông tin – từ lúc nhận cảnh báo tự động qua Webhook cho đến khi các kỹ sư nhảy vào chat để debug. Việc lưu trữ memory tập trung bằng Database giúp Agent duy trì được sự liền mạch của toàn bộ diễn biến sự cố, dù cho có trải qua nhiều session hội thoại khác nhau.
+*   **Điều không hoạt động:** Chúng tôi từng thử dùng *Window Buffer Memory* mặc định của n8n cho nhanh. Nhưng cách này thực sự không ổn định vì context hay bị reset hoàn toàn mỗi khi workflow phải khởi động lại. Chưa kể, với những chuỗi hội thoại RAG dài và chứa nhiều dữ liệu log, bộ nhớ RAM cấp phát rất dễ bị tràn gây lỗi. Chuyển toàn bộ việc quản lý ngữ cảnh sang *PostgreSQL Chat Memory tool* là bước đi đúng đắn nhất để lưu trữ dữ liệu vĩnh viễn và truy xuất lịch sử mượt mà hơn hẳn.
+   
+---
+
 # 4. Bằng chứng hệ thống (Per-Level Evidence)
 
 ## 4.1. Level 1 — Basic RAG Retrieval
