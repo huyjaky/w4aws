@@ -3,7 +3,7 @@
 | Thông tin | Chi tiết |
 | :--- | :--- |
 | **Số nhóm** | 10 |
-| **Tên thành viên** | [Điền tên các thành viên trong nhóm] |
+| **Tên thành viên** | Lê Trần Tuấn Khanh, Trần Mạnh Trường, Trần Mạnh Cường, Nguyễn Đức Hảo, Lê Văn Hải, Phan Đức Huy, Lê Viết Quốc Hưng, Huỳnh Xuân Hậu, Nguyễn Thị Mến, Trần Quốc Hùng |
 | **LLM** | Claude 4.6 |
 | **Embedding** | bge-m3, BM-25 |
 | **Framework sử dụng** | LangChain, N8N |
