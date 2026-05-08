@@ -252,4 +252,9 @@ prompt để giải quyết
 ## 5.3 Bonus C — Data Operations
 
 <img width="1184" height="510" alt="image" src="https://github.com/user-attachments/assets/36411a47-abdc-4de6-99ee-2d148281be83" />
+<img width="1446" height="365" alt="image" src="https://github.com/user-attachments/assets/282f5489-1bab-4945-8ce9-08d9117ce765" />
+<img width="720" height="372" alt="image" src="https://github.com/user-attachments/assets/c31aae75-7564-43b6-bea8-c3617dd9b9e6" />
+<img width="1895" height="816" alt="image" src="https://github.com/user-attachments/assets/54b79af7-18df-42fa-84c2-8c3828e1b2ef" />
+
+
 
